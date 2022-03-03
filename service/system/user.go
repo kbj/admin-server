@@ -39,9 +39,10 @@ func (u *UserService) UserLogin(param *request.SysUserModel) *base.R {
 	}
 
 	result := map[string]interface{}{
-		"id":    user.ID,
-		"name":  user.Name,
-		"token": token,
+		"id":       user.ID,
+		"name":     user.Name,
+		"realName": user.RealName,
+		"token":    token,
 	}
 	return utils.ResponseSuccess("登录成功", &result)
 }
