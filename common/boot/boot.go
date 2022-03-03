@@ -64,7 +64,7 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 		}
 
 		// 全局使用JSON方式返回错误
-		return c.Status(errorCode).JSON(base.ResponseEntity{
+		return c.Status(errorCode).JSON(&base.R{
 			Code: enum.StatusInternalServerError,
 			Msg:  err.Error(),
 		})

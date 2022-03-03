@@ -2,7 +2,7 @@ package internal
 
 import (
 	"admin-server/common/global"
-	"admin-server/entity/system"
+	"admin-server/model/system"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"os"

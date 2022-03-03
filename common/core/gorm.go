@@ -33,12 +33,12 @@ func InitializeDbInstance() *gorm.DB {
 // 生成gorm的配置信息
 func getGormConfig() *gorm.Config {
 	// 禁用自动创建外键约束
-	config := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
+	config := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: false}
 
 	// 修改默认的命名策略
 	config.NamingStrategy = schema.NamingStrategy{
-		TablePrefix:   "t_",  // 表名前缀
-		SingularTable: false, // 使用单数表名
+		TablePrefix:   "t_", // 表名前缀
+		SingularTable: true, // 使用单数表名
 	}
 
 	// 设置日志

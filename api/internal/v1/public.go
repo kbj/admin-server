@@ -6,20 +6,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// InitBaseRoute 无需验证登录权限的路由
-func InitBaseRoute(route *fiber.Router) {
-	router := *route
-	router.Get("/health", checkHealth)
-	router.Post("/login", userLogin)
-}
+type PublicApi struct{}
 
-// 健康检查
-func checkHealth(context *fiber.Ctx) error {
+// Health 检测服务的健康状态
+func (p *PublicApi) Health(context *fiber.Ctx) error {
 	return context.JSON(utils.ResponseSuccess("", "ok"))
 }
 
-// 用户登录
-func userLogin(context *fiber.Ctx) error {
+// Login 用户登录
+func (p *PublicApi) Login(context *fiber.Ctx) error {
 	// 获取登录信息
 	var user request.SysUserModel
 	_ = context.BodyParser(&user)
@@ -29,5 +24,5 @@ func userLogin(context *fiber.Ctx) error {
 		return context.JSON(&success)
 	}
 
-	return context.JSON(userService.UserLogin(context, &user))
+	return context.JSON(userService.UserLogin(&user))
 }
