@@ -10,7 +10,10 @@ import (
 	"strings"
 )
 
-var roleService = service.ServiceApp.System.RoleService
+var (
+	roleService = service.ServiceApp.System.RoleService
+	userService = service.ServiceApp.System.UserService
+)
 
 // AuthLogin 自定义中间件，校验登录状态
 func AuthLogin() fiber.Handler {
@@ -41,10 +44,11 @@ func AuthLogin() fiber.Handler {
 		c.Locals(enum.SystemUserClaims, claims)
 		// 查出拥有的角色id列表放入
 		roleIds, _ := roleService.GetUserRoles(claims.BaseClaims.ID)
-		if roleIds != nil && *roleIds != "" {
+		if roleIds != nil && len(*roleIds) > 0 {
 			c.Locals(enum.SystemRoleIds, roleIds)
 		}
-		// 根据业务需求决定是否要查询出user对象放入session中
+		// 用户信息
+		c.Locals(enum.SystemUserInfo, userService.GetUserInfo(claims.BaseClaims.ID))
 		return c.Next()
 	}
 }

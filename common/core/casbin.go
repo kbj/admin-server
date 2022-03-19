@@ -58,8 +58,8 @@ func initDefaultCasbin() {
 		return
 	}
 	rules := [][]string{
-		{"*", "/system/user/", "POST"},    // 登录接口
-		{"*", "/system/menu/list", "GET"}, // 菜单列表接口
+		{"*", "/system/user/", "POST"},         // 登录接口
+		{"*", "/system/menu/tree_list", "GET"}, // 菜单列表接口
 	}
 	ok, err := syncedEnforcer.AddPolicies(rules)
 	if err != nil {

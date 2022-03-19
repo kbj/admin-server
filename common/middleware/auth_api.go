@@ -4,7 +4,9 @@ import (
 	"admin-server/common/core"
 	"admin-server/common/enum"
 	"admin-server/utils/r"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"strings"
 )
 
 // AuthApi 验证是否有API权限的中间件
@@ -15,11 +17,12 @@ func AuthApi() fiber.Handler {
 		act := c.Method()
 
 		// 获取角色信息
-		sub := c.Locals(enum.SystemRoleIds).(*string)
+		roleIds := *(c.Locals(enum.SystemRoleIds).(*[]int))
+		sub := strings.Replace(strings.Trim(fmt.Sprint(roleIds), "[]"), " ", ",", -1)
 
 		// 使用casbin判断是否有权限
 		e := core.GetCasbin()
-		ok, _ := e.Enforce(*sub, obj, act)
+		ok, _ := e.Enforce(sub, obj, act)
 		if ok {
 			return c.Next()
 		}

@@ -41,3 +41,12 @@ func (u *UserService) UserLogin(param *request.SysUserModel) (interface{}, error
 	}
 	return &result, nil
 }
+
+// GetUserInfo 根据用户ID查询出用户信息
+func (u *UserService) GetUserInfo(userId int) *system.User {
+	var user system.User
+	if err := global.Db.First(&user, userId).Error; err != nil {
+		panic(err)
+	}
+	return &user
+}
