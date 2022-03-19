@@ -1,12 +1,13 @@
 package v1
 
-import "admin-server/service"
+import (
+	"admin-server/api/internal/v1/base"
+	"admin-server/api/internal/v1/system"
+)
 
 type ApiGroup struct {
-	UserApi
-	PublicApi
+	BaseApiGroup   base.ApiGroup
+	SystemApiGroup system.ApiGroup
 }
 
-var (
-	userService = service.ServiceApp.System.UserService
-)
+var ApiGroupApp = new(ApiGroup)

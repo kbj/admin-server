@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"admin-server/model/base"
+	"errors"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -26,11 +26,11 @@ func initializeValidator() {
 	_ = translations.RegisterDefaultTranslations(validate, trans)
 }
 
-func ValidateStruct(entity interface{}) *base.R {
+func ValidateStruct(entity interface{}) error {
 	// 只允许传入结构体
 	info := reflect.TypeOf(entity)
 	if info.Kind() != reflect.Struct {
-		return ResponseFail("校验失败！")
+		return errors.New("校验失败！")
 	} else if validate == nil {
 		initializeValidator()
 	}
@@ -44,7 +44,7 @@ func ValidateStruct(entity interface{}) *base.R {
 		for _, e := range errs {
 			errMsg = append(errMsg, e.Translate(trans))
 		}
-		return ResponseFail(strings.Join(errMsg, ","))
+		return errors.New(strings.Join(errMsg, ","))
 	}
 	return nil
 }

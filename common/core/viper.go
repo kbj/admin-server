@@ -65,15 +65,16 @@ func InitializeViper(path ...string) *viper.Viper {
 
 // 添加默认设置
 func addDefault(v *viper.Viper) {
-	v.SetDefault("zap.dir", "./logs")                    // 日志目录
-	v.SetDefault("zap.log-in-console", true)             // 是否打印日志到控制台
-	v.SetDefault("system.listen", "0.0.0.0")             // 监听地址
-	v.SetDefault("system.port", "8080")                  // 启动端口
-	v.SetDefault("system.db-type", "mysql")              // 默认数据库类型
-	v.SetDefault("jwt.signing-key", "default-jwt-token") // 默认的jwt加密密钥
-	v.SetDefault("jwt.expires-second", 7776000)          // 默认的token过期时间  90天
-	v.SetDefault("jwt.buffer-second", 604800)            // 默认的token过期的缓冲时间  7天
-	v.SetDefault("jwt.issuer", "kbj")                    // 默认token签发者
-	v.SetDefault("system.db.max-idle-conn", 10)          // 默认数据库空闲连接数
-	v.SetDefault("system.db.max-open-conn", 100)         // 默认数据库最大连接数
+	v.SetDefault("zap.dir", "./logs")                                       // 日志目录
+	v.SetDefault("zap.log-in-console", true)                                // 是否打印日志到控制台
+	v.SetDefault("system.listen", "0.0.0.0")                                // 监听地址
+	v.SetDefault("system.port", "8080")                                     // 启动端口
+	v.SetDefault("system.db-type", "mysql")                                 // 默认数据库类型
+	v.SetDefault("jwt.signing-key", "default-jwt-token")                    // 默认的jwt加密密钥
+	v.SetDefault("jwt.expires-second", 7776000)                             // 默认的token过期时间  90天
+	v.SetDefault("jwt.buffer-second", 604800)                               // 默认的token过期的缓冲时间  7天
+	v.SetDefault("jwt.issuer", "kbj")                                       // 默认token签发者
+	v.SetDefault("system.db.max-idle-conn", 10)                             // 默认数据库空闲连接数
+	v.SetDefault("system.db.max-open-conn", 100)                            // 默认数据库最大连接数
+	v.SetDefault("casbin.model-path", "./resources/casbin_rbac_model.conf") // casBin的原型存放位置
 }

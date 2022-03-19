@@ -3,6 +3,8 @@ module admin-server
 go 1.17
 
 require (
+	github.com/casbin/casbin/v2 v2.42.0
+	github.com/casbin/gorm-adapter/v3 v3.5.0
 	github.com/gofiber/contrib/fiberzap v0.0.0-20211207071552-97ea1c071d84
 	github.com/gofiber/fiber/v2 v2.28.0
 	github.com/golang-jwt/jwt/v4 v4.2.0
@@ -13,23 +15,33 @@ require (
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
-	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.10.0
 	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	gorm.io/driver/mysql v1.2.3
 	gorm.io/gorm v1.22.5
 	moul.io/zapgorm2 v1.1.1
 )
 
 require (
+	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
+	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/denisenkom/go-mssqldb v0.11.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgconn v1.10.0 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.1.1 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
+	github.com/jackc/pgtype v1.8.1 // indirect
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
@@ -45,8 +57,13 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.33.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
+	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gorm.io/driver/postgres v1.2.2 // indirect
+	gorm.io/driver/sqlserver v1.2.1 // indirect
+	gorm.io/plugin/dbresolver v1.1.0 // indirect
 )

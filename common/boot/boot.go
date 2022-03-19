@@ -6,8 +6,10 @@ import (
 	"admin-server/common/enum"
 	"admin-server/common/global"
 	"admin-server/model/base"
+	"admin-server/utils/r"
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"go.uber.org/zap"
 	"os"
 	"os/signal"
@@ -31,6 +33,9 @@ func Init(app *fiber.App) {
 	app.Use(fiberzap.New(fiberzap.Config{
 		Logger: global.Logger,
 	}))
+
+	// 需要使用recover处理错误
+	app.Use(recover.New())
 
 	// 注册路由
 	api.RegisterRoute(app)
@@ -58,14 +63,26 @@ func Start(app *fiber.App, listen string) {
 // ErrorHandler 通用的错误处理逻辑
 func ErrorHandler() func(c *fiber.Ctx, err error) error {
 	return func(c *fiber.Ctx, err error) error {
-		errorCode := fiber.StatusInternalServerError
-		if e, ok := err.(*fiber.Error); ok {
-			errorCode = e.Code
+		httpCode := fiber.StatusInternalServerError
+		code := enum.StatusInternalServerError
+
+		if e, ok := err.(*global.CustomErrorType); ok {
+			httpCode = fiber.StatusOK
+			code = e.Code
+		} else if e, ok := err.(*fiber.Error); ok {
+			httpCode = e.Code
+			if global.Logger != nil {
+				global.Logger.Error("Fiber框架发出了异常信息", zap.Error(e))
+			}
+		} else {
+			if global.Logger != nil {
+				global.Logger.Error("发生了未知异常", zap.Error(err))
+			}
 		}
 
 		// 全局使用JSON方式返回错误
-		return c.Status(errorCode).JSON(&base.R{
-			Code: enum.StatusInternalServerError,
+		return r.Response(c.Status(httpCode), &base.R{
+			Code: code,
 			Msg:  err.Error(),
 		})
 	}
@@ -73,9 +90,4 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 
 // 优雅关机后业务方面需要执行的任务
 func cleanupTasks() {
-	// 数据库关闭
-	//if global.Db != nil {
-	//	global.Logger.Info("Shutdown db connect")
-	//	_ = global.Db.Close()
-	//}
 }

@@ -18,7 +18,7 @@ var (
 	Db                 *gorm.DB                // 数据库Orm对象
 )
 
-var (
+const (
 	// ConfigEnvName 配置文件的环境变量名
 	ConfigEnvName = "GVA_CONFIG"
 

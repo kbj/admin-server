@@ -3,16 +3,8 @@ package utils
 import (
 	"admin-server/common/global"
 	"admin-server/model/base"
-	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
-)
-
-var (
-	TokenExpired     = errors.New("token is expired")
-	TokenNotValidYet = errors.New("token not active yet")
-	TokenMalformed   = errors.New("that's not even a token")
-	TokenInvalid     = errors.New("couldn't handle this token")
 )
 
 // CreateJwtToken 创建token
@@ -38,19 +30,22 @@ func CreateClaims(claims base.BaseClaims) base.CustomClaims {
 // ParseJwtToken 解析Token
 func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
-		return global.Config.Jwt.SigningKey, nil
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, global.TokenInvalid
+		}
+		return []byte(global.Config.Jwt.SigningKey), nil
 	})
 	if err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-				return nil, TokenMalformed
+				return nil, global.TokenMalformed
 			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
 				// Token is expired
-				return nil, TokenExpired
+				return nil, global.TokenExpired
 			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return nil, TokenNotValidYet
+				return nil, global.TokenNotValidYet
 			} else {
-				return nil, TokenInvalid
+				return nil, global.TokenInvalid
 			}
 		}
 	}
@@ -58,9 +53,9 @@ func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 		if claims, ok := token.Claims.(*base.CustomClaims); ok && token.Valid {
 			return claims, nil
 		}
-		return nil, TokenInvalid
+		return nil, global.TokenInvalid
 	} else {
-		return nil, TokenInvalid
+		return nil, global.TokenInvalid
 	}
 }
 
