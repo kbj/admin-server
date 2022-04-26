@@ -21,6 +21,7 @@ type PageModel struct {
 	PageNum  *int64  `json:"pageNum"`  // 要请求的页码
 	PageSize *int64  `json:"pageSize"` // 每页大小
 	OrderBy  *string `json:"orderBy"`  // 排序字段
+	Desc     bool    `json:"desc"`     // 是否逆序
 }
 
 // GetPage 获取当前页

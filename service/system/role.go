@@ -42,6 +42,6 @@ func (r *RoleService) GetRoleList(param *request.SysRoleParamModel) (err error, 
 	}
 
 	// 执行分页查询
-	err = p.SelectPageList(db)
+	err = p.SelectPageList(db, param.OrderBy, param.Desc)
 	return err, p
 }

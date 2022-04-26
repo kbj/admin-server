@@ -60,12 +60,22 @@ type PageResult[T any] struct {
 }
 
 // SelectPageList 分页查询方法
-func (p *PageResult[T]) SelectPageList(db *gorm.DB) error {
+func (p *PageResult[T]) SelectPageList(db *gorm.DB, orderBy *string, desc bool) error {
 	db.Count(&p.Total)
 	if p.Total == 0 {
 		// 没有符合条件的数据，直接返回一个T类型的空列表
 		p.Records = []T{}
 	} else {
+		// todo 判断排序规则，后续加上特殊字符过滤
+		if orderBy != nil && *orderBy != "" {
+			if desc {
+				db.Order(*orderBy + " desc")
+			} else {
+				db.Order(*orderBy)
+			}
+		}
+
+		// 执行分页查询
 		if err := db.Scopes(paginate(p)).Find(&p.Records).Error; err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 			// 没有符合条件的数据，直接返回一个T类型的空列表
 			p.Records = []T{}
