@@ -15,12 +15,8 @@ type MenuService struct{}
 // TreeList 查询用户的菜单树
 func (m *MenuService) TreeList(userId *uint) (*[]response.MenuTreeModel, error) {
 	// 查询出角色相关的菜单
-	sql := `with recursive t as (
-		select role_id from t_user_role where delete_at is null and user_id = ?
-		union all
-		select t1.id from t_role t1, t where t1.parent_id = t.role_id and t1.delete_at is null
-	), m as (
-		select id, create_at, sequence, name, parent_id, path, icon, is_hide, type from t_menu where id in (select t.role_id from t) and delete_at is null
+	sql := `with recursive m as (
+		select id, create_at, sequence, name, parent_id, path, icon, is_hide, type from t_menu where id in (select menu_id from t_role_menu where delete_at is null and role_id in (select role_id from t_user_role where delete_at is null and user_id = ?)) and delete_at is null
 		union all
 		select m1.id, m1.create_at, m1.sequence, m1.name, m1.parent_id, m1.path, m1.icon, m1.is_hide, m1.type from t_menu m1, m where m1.parent_id = m.id and m1.delete_at is null
 	)

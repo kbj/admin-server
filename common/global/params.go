@@ -17,11 +17,3 @@ var (
 	ConcurrencyControl = &singleflight.Group{} // 并发控制
 	Db                 *gorm.DB                // 数据库Orm对象
 )
-
-const (
-	// ConfigEnvName 配置文件的环境变量名
-	ConfigEnvName = "GVA_CONFIG"
-
-	// ConfigFileName 配置文件的路径
-	ConfigFileName = "config.yaml"
-)

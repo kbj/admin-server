@@ -32,7 +32,14 @@ func RegisterRoute(app *fiber.App) {
 			menuRouter := systemRouter.Group("/menu")
 			menuRoutes := v1Routes.SystemApiGroup.MenuApi
 
-			menuRouter.Get("/tree_list", menuRoutes.TreeList) // 菜单列表
+			menuRouter.Get("/tree-list", menuRoutes.TreeList) // 菜单列表
+		}
+		{
+			// 角色
+			roleRouter := systemRouter.Group("/role")
+			roleRoutes := v1Routes.SystemApiGroup.RoleApi
+
+			roleRouter.Post("/list", roleRoutes.List)
 		}
 	}
 

@@ -2,6 +2,7 @@ package response
 
 type MenuTreeModel struct {
 	ID       *uint            `json:"id"`
+	Name     *string          `json:"name"`
 	Sequence *int             `json:"sequence"`
 	ParentId *uint            `json:"parentId"`
 	Path     *string          `json:"path"`

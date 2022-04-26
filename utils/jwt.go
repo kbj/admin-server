@@ -29,7 +29,7 @@ func CreateClaims(claims base.BaseClaims) base.CustomClaims {
 
 // ParseJwtToken 解析Token
 func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
+	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i any, e error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, global.TokenInvalid
 		}
@@ -62,7 +62,7 @@ func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 // RefreshJwtToken 刷新新的token
 func RefreshJwtToken(oldToken string, claims base.CustomClaims) (string, error) {
 	// 使用并发控制
-	v, err, _ := global.ConcurrencyControl.Do("JWT:"+oldToken, func() (interface{}, error) {
+	v, err, _ := global.ConcurrencyControl.Do("JWT:"+oldToken, func() (any, error) {
 		return CreateJwtToken(claims)
 	})
 	return v.(string), err

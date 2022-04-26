@@ -3,6 +3,7 @@ package core
 import (
 	"admin-server/common/core/internal"
 	"admin-server/common/global"
+	"errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"moul.io/zapgorm2"
@@ -47,4 +48,56 @@ func getGormConfig() *gorm.Config {
 	config.Logger = log
 
 	return config
+}
+
+// PageResult 分页数据结构
+type PageResult[T any] struct {
+	Records  []T   `json:"records"`  // 分页数据
+	Total    int64 `json:"total"`    // 总条目数
+	Pages    int64 `json:"pages"`    // 总页数
+	PageSize int64 `json:"pageSize"` // 每页数据量
+	Current  int64 `json:"current"`  // 当前页数
+}
+
+// SelectPageList 分页查询方法
+func (p *PageResult[T]) SelectPageList(db *gorm.DB) error {
+	db.Count(&p.Total)
+	if p.Total == 0 {
+		// 没有符合条件的数据，直接返回一个T类型的空列表
+		p.Records = []T{}
+	} else {
+		if err := db.Scopes(paginate(p)).Find(&p.Records).Error; err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+			// 没有符合条件的数据，直接返回一个T类型的空列表
+			p.Records = []T{}
+		} else {
+			return err
+		}
+	}
+	return nil
+}
+
+// Paginate 泛型封装的分页抽象
+func paginate[T any](page *PageResult[T]) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if page.Current <= 0 {
+			page.Current = 0
+		}
+		switch {
+		case page.PageSize > 100:
+			page.PageSize = 100
+		case page.PageSize <= 0:
+			page.PageSize = 10
+		}
+		page.Pages = page.Total / page.PageSize
+		if page.Total%page.PageSize != 0 {
+			page.Pages++
+		}
+		p := page.Current
+		if page.Current > page.Pages {
+			p = page.Pages
+		}
+		size := page.PageSize
+		offset := int((p - 1) * size)
+		return db.Offset(offset).Limit(int(size))
+	}
 }

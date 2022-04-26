@@ -26,7 +26,7 @@ func initializeValidator() {
 	_ = translations.RegisterDefaultTranslations(validate, trans)
 }
 
-func ValidateStruct(entity interface{}) error {
+func ValidateStruct(entity any) error {
 	// 只允许传入结构体
 	info := reflect.TypeOf(entity)
 	if info.Kind() != reflect.Struct {

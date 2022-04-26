@@ -30,7 +30,7 @@ func GetCasbin() *casbin.SyncedEnforcer {
 }
 
 // 把传入的资源用逗号连接的角色ID都分开匹配
-func checkRolesFunc(args ...interface{}) (interface{}, error) {
+func checkRolesFunc(args ...any) (any, error) {
 	r := args[0].(string)
 	p := args[1].(string)
 
@@ -59,7 +59,7 @@ func initDefaultCasbin() {
 	}
 	rules := [][]string{
 		{"*", "/system/user/", "POST"},         // 登录接口
-		{"*", "/system/menu/tree_list", "GET"}, // 菜单列表接口
+		{"*", "/system/menu/tree-list", "GET"}, // 菜单列表接口
 	}
 	ok, err := syncedEnforcer.AddPolicies(rules)
 	if err != nil {

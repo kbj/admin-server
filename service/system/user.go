@@ -13,7 +13,7 @@ import (
 type UserService struct{}
 
 // UserLogin 用户登录
-func (u *UserService) UserLogin(param *request.SysUserModel) (interface{}, error) {
+func (u *UserService) UserLogin(param *request.SysUserModel) (any, error) {
 	var user system.User
 	global.Db.Where("name = ?", param.Name).Or("phone = ?", param.Name).Limit(1).Find(&user)
 	if user.ID == nil || *user.ID < 1 || utils.Md5Encode(param.Password) != *user.Password {
@@ -33,7 +33,7 @@ func (u *UserService) UserLogin(param *request.SysUserModel) (interface{}, error
 		return nil, errors.New("系统错误！请联系管理员")
 	}
 
-	result := map[string]interface{}{
+	result := map[string]any{
 		"id":       user.ID,
 		"name":     user.Name,
 		"realName": user.RealName,

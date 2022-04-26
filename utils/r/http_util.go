@@ -29,7 +29,7 @@ func Code(code int) ResponseOptions {
 }
 
 // Ok 返回成功数据
-func Ok(c *fiber.Ctx, data interface{}, options ...ResponseOptions) error {
+func Ok(c *fiber.Ctx, data any, options ...ResponseOptions) error {
 	c.Status(fiber.StatusOK)
 	r := &base.R{
 		Code: enum.StatusSuccess,
@@ -77,6 +77,6 @@ func NotFound(c *fiber.Ctx) error {
 	})
 }
 
-func Response(c *fiber.Ctx, resp interface{}) error {
+func Response(c *fiber.Ctx, resp any) error {
 	return c.JSON(resp)
 }
