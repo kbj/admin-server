@@ -40,6 +40,9 @@ func (r *RoleService) GetRoleList(param *request.SysRoleParamModel) (err error, 
 	if param.RoleCode != nil && *param.RoleCode != "" {
 		db.Where("role_code like ?", "%"+*param.RoleCode+"%")
 	}
+	if param.CreateAt != nil && param.CreateAt[0] != nil && param.CreateAt[1] != nil {
+		db.Where("create_at <= ? and create_at >= ?", param.CreateAt[0].ToTime(), param.CreateAt[1].ToTime())
+	}
 
 	// 执行分页查询
 	err = p.SelectPageList(db, param.OrderBy, param.Desc)
