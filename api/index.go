@@ -40,6 +40,7 @@ func RegisterRoute(app *fiber.App) {
 			roleRoutes := v1Routes.SystemApiGroup.RoleApi
 
 			roleRouter.Post("/list", roleRoutes.List)
+			roleRouter.Delete("/:id", roleRoutes.Delete)
 		}
 	}
 
