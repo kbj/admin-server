@@ -31,7 +31,7 @@ func (roleApi *RoleApi) Delete(c *fiber.Ctx) error {
 	// 将id转为int格式
 	intId, err := utils.StringArray2intArray(&id)
 	if err != nil {
-		return r.Fail(c, "删除失败！"+err.Error())
+		return r.Fail(c, "删除失败"+err.Error())
 	}
 
 	// 删除角色
@@ -41,7 +41,7 @@ func (roleApi *RoleApi) Delete(c *fiber.Ctx) error {
 			return r.Response(c, e)
 		}
 		global.Logger.Error("删除角色失败", zap.Error(err))
-		return r.Fail(c, "删除失败！"+err.Error())
+		return r.Fail(c, "删除失败"+err.Error())
 	}
 	return r.Ok(c, "删除成功")
 }
