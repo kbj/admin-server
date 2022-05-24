@@ -13,7 +13,6 @@ func InitializeTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		system.User{},
 		system.Role{},
-		system.UserRole{},
 		system.Menu{},
 		system.RoleMenu{},
 	)

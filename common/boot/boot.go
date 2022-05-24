@@ -5,7 +5,7 @@ import (
 	"admin-server/common/core"
 	"admin-server/common/enum"
 	"admin-server/common/global"
-	"admin-server/model/base"
+	"admin-server/model/common"
 	"admin-server/utils/r"
 	"github.com/gofiber/contrib/fiberzap"
 	"github.com/gofiber/fiber/v2"
@@ -25,6 +25,9 @@ func Init(app *fiber.App) {
 
 	// 初始化数据库
 	global.Db = core.InitializeDbInstance()
+
+	// 初始化Redis连接
+	global.RedisClient = core.GetRedisClient()
 
 	// 初始化session池
 	global.Session = core.InitializeSession()
@@ -81,7 +84,7 @@ func ErrorHandler() func(c *fiber.Ctx, err error) error {
 		}
 
 		// 全局使用JSON方式返回错误
-		return r.Response(c.Status(httpCode), &base.R{
+		return r.Response(c.Status(httpCode), &common.R{
 			Code: code,
 			Msg:  err.Error(),
 		})

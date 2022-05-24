@@ -13,7 +13,7 @@ import (
 type MenuService struct{}
 
 // TreeList 查询用户的菜单树
-func (m *MenuService) TreeList(userId *uint) (*[]response.MenuTreeModel, error) {
+func (m *MenuService) TreeList(userId uint) (*[]response.MenuTreeModel, error) {
 	// 查询出角色相关的菜单
 	sql := `with recursive m as (
 		select id, create_at, sequence, name, parent_id, path, icon, is_hide, type from t_menu where id in (select menu_id from t_role_menu where delete_at is null and role_id in (select role_id from t_user_role where delete_at is null and user_id = ?)) and delete_at is null

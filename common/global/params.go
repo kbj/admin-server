@@ -2,6 +2,7 @@ package global
 
 import (
 	"admin-server/common/config"
+	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -16,4 +17,5 @@ var (
 	Session            *session.Store          // 全局session池
 	ConcurrencyControl = &singleflight.Group{} // 并发控制
 	Db                 *gorm.DB                // 数据库Orm对象
+	RedisClient        *redis.Client           // redis连接客户端
 )

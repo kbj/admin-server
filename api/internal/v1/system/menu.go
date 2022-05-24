@@ -11,7 +11,7 @@ type MenuApi struct{}
 
 // TreeList 前端树形菜单列表
 func (m *MenuApi) TreeList(c *fiber.Ctx) error {
-	userId := c.Locals(enum.SystemUserInfo).(*system.User).ID
+	userId := c.Locals(enum.SystemUserInfo).(*system.LoginUser).UserId
 	treeList, err := menuService.TreeList(userId)
 	if err != nil {
 		return r.Fail(c, err.Error())

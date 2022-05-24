@@ -52,18 +52,25 @@ func (r *RoleService) GetRoleList(param *request.SysRoleParamModel) (err error, 
 // Delete 删除角色
 func (r *RoleService) Delete(id *[]uint) error {
 	// 检查角色是否已经有用户
-	var result []system.UserRole
-	if err := global.Db.Where("role_id in ?", *id).Find(&result).Error; err != nil {
+	var roles []system.Role
+	if err := global.Db.Where("id in ?", *id).Find(&roles).Error; err != nil {
 		return err
 	}
-	if len(result) > 0 {
-		return global.NewError("该角色下已关联有用户，无法删除")
+	e := core.GetCasbin()
+	for _, role := range roles {
+		users, err := e.GetUsersForRole(*role.RoleCode)
+		if (users != nil && len(users) > 0) || err != nil {
+			return global.NewError(*role.RoleName + "角色下已关联有用户，无法删除")
+		}
 	}
 
 	return global.Db.Transaction(func(tx *gorm.DB) error {
 		// 先删除角色菜单关联
-		if err := tx.Where("role_id in ?", *id).Delete(&system.RoleMenu{}).Error; err != nil {
-			return err
+		for _, role := range roles {
+			_, err := e.DeleteRole(*role.RoleCode)
+			if err != nil {
+				return err
+			}
 		}
 
 		// 删除角色

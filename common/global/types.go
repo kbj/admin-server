@@ -1,5 +1,7 @@
 package global
 
-import "admin-server/model/base"
+import (
+	"admin-server/model/common"
+)
 
-type CustomErrorType base.R // 全局业务错误处理
+type CustomErrorType common.R // 全局业务错误处理

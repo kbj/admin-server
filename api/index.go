@@ -11,6 +11,7 @@ import (
 
 // RegisterRoute 注册系统所有的路由
 func RegisterRoute(app *fiber.App) {
+	app.Use(middleware.SetHeader())
 	app.Use(cors.New()) // 是否需要允许跨域
 	v1Routes := internal.ApiVersionApp.V1
 

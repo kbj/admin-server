@@ -2,11 +2,11 @@ package r
 
 import (
 	"admin-server/common/enum"
-	"admin-server/model/base"
+	"admin-server/model/common"
 	"github.com/gofiber/fiber/v2"
 )
 
-type ResponseOptions func(*base.R)
+type ResponseOptions func(*common.R)
 
 const (
 	defaultOkMsg = "操作成功"
@@ -16,22 +16,21 @@ const (
 
 // Msg 设置自定义返回Msg的方法
 func Msg(msg string) ResponseOptions {
-	return func(r *base.R) {
+	return func(r *common.R) {
 		r.Msg = msg
 	}
 }
 
 // Code 设置自定义的编码值
 func Code(code int) ResponseOptions {
-	return func(r *base.R) {
+	return func(r *common.R) {
 		r.Code = code
 	}
 }
 
 // Ok 返回成功数据
 func Ok(c *fiber.Ctx, data any, options ...ResponseOptions) error {
-	c.Status(fiber.StatusOK)
-	r := &base.R{
+	r := &common.R{
 		Code: enum.StatusSuccess,
 		Msg:  defaultOkMsg,
 		Data: data,
@@ -42,12 +41,12 @@ func Ok(c *fiber.Ctx, data any, options ...ResponseOptions) error {
 		op(r)
 	}
 
-	return c.JSON(&r)
+	return c.JSON(r)
 }
 
 // Fail 返回失败数据
 func Fail(c *fiber.Ctx, msg string) error {
-	return c.JSON(&base.R{
+	return c.JSON(&common.R{
 		Code: enum.StatusError,
 		Msg:  msg,
 	})
@@ -55,8 +54,7 @@ func Fail(c *fiber.Ctx, msg string) error {
 
 // NotAuth 无权限
 func NotAuth(c *fiber.Ctx, options ...ResponseOptions) error {
-	c.Status(fiber.StatusForbidden)
-	r := &base.R{
+	r := &common.R{
 		Code: enum.StatusForbidden,
 		Msg:  noAuthMsg,
 	}
@@ -66,12 +64,20 @@ func NotAuth(c *fiber.Ctx, options ...ResponseOptions) error {
 		op(r)
 	}
 
-	return c.JSON(&r)
+	return c.JSON(r)
+}
+
+// NeedLogin 需要登录
+func NeedLogin(c *fiber.Ctx) error {
+	return c.JSON(&common.R{
+		Code: enum.StatusLoginExpired,
+		Msg:  "登录信息已过期",
+	})
 }
 
 // NotFound 找不到
 func NotFound(c *fiber.Ctx) error {
-	return c.JSON(&base.R{
+	return c.JSON(&common.R{
 		Code: enum.StatusNotFound,
 		Msg:  notFoundMsg,
 	})

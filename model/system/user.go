@@ -1,12 +1,12 @@
 package system
 
 import (
-	"admin-server/model/base"
+	"admin-server/model/common"
 )
 
 // User 用户信息
 type User struct {
-	base.Model
+	common.Model
 	Name     *string `gorm:"index;comment:姓名;size:100;<-:create;unique;not null"`
 	RealName *string `gorm:"comment:真实姓名;size:100"`
 	Password *string `gorm:"comment:密码:size:1000"`

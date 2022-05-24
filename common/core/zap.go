@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"time"
 )
 
 // InitializeZap 初始化zap实例
@@ -35,12 +36,14 @@ func InitializeZap() (logger *zap.Logger) {
 		return lev >= zap.ErrorLevel
 	})
 
+	nowDate := time.Now().Format("2006-01-02")
+
 	// 依据不同级别生成不同的core
 	cores := [...]zapcore.Core{
-		getEncoderCore(fmt.Sprintf("%s/server_debug.log", global.Config.Zap.Dir), debugPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_info.log", global.Config.Zap.Dir), infoPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_warn.log", global.Config.Zap.Dir), warnPriority),
-		getEncoderCore(fmt.Sprintf("%s/server_error.log", global.Config.Zap.Dir), errorPriority),
+		getEncoderCore(fmt.Sprintf("%s/%s/server_debug.log", global.Config.Zap.Dir, nowDate), debugPriority),
+		getEncoderCore(fmt.Sprintf("%s/%s/server_info.log", global.Config.Zap.Dir, nowDate), infoPriority),
+		getEncoderCore(fmt.Sprintf("%s/%s/server_warn.log", global.Config.Zap.Dir, nowDate), warnPriority),
+		getEncoderCore(fmt.Sprintf("%s/%s/server_error.log", global.Config.Zap.Dir, nowDate), errorPriority),
 	}
 
 	// 生成zap对象
@@ -82,7 +85,7 @@ func getEncoderConfig() zapcore.Encoder {
 		StacktraceKey:  "stacktrace",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTime:     customTimeEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder,
 	}
@@ -102,4 +105,9 @@ func getEncoderConfig() zapcore.Encoder {
 	// 现在先使用控制台的编码方式，还有JSON编码器:NewJSONEncoder
 	encoder := zapcore.NewConsoleEncoder(config)
 	return encoder
+}
+
+// customTimeEncoder 自定义日志输出时间格式
+func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format("2006-01-02 / 15:04:05.000 / -0700"))
 }

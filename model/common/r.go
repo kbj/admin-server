@@ -1,4 +1,4 @@
-package base
+package common
 
 // R 一般数据通用返回结构
 type R struct {

@@ -1,4 +1,4 @@
-package base
+package common
 
 import (
 	"admin-server/model/system/request"
@@ -25,9 +25,10 @@ func (p *PublicApi) Login(context *fiber.Ctx) error {
 		return r.Fail(context, err.Error())
 	}
 
-	data, err := userService.UserLogin(&user)
+	data, token, err := userService.UserLogin(&user)
 	if err != nil {
 		return r.Fail(context, err.Error())
 	}
+	context.Set(fiber.HeaderAuthorization, *token)
 	return r.Ok(context, data, r.Msg("登录成功"))
 }

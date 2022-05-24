@@ -1,10 +1,12 @@
 package response
 
-import "admin-server/model/base"
+import (
+	"admin-server/model/common"
+)
 
 // SysRoleResponse 角色列表返回实体
 type SysRoleResponse struct {
-	base.Model
+	common.Model
 	RoleName *string `json:"roleName"`
 	RoleCode *string `json:"roleCode"`
 }

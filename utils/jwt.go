@@ -2,21 +2,21 @@ package utils
 
 import (
 	"admin-server/common/global"
-	"admin-server/model/base"
+	"admin-server/model/common"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
 
 // CreateJwtToken 创建token
-func CreateJwtToken(claims base.CustomClaims) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+func CreateJwtToken(claims *common.JwtClaims) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, *claims)
 	return token.SignedString([]byte(global.Config.Jwt.SigningKey))
 }
 
 // CreateClaims 根据传来的值生成Claims
-func CreateClaims(claims base.BaseClaims) base.CustomClaims {
-	newClaims := base.CustomClaims{
-		BaseClaims: claims,
+func CreateClaims(userId *uint) *common.JwtClaims {
+	newClaims := common.JwtClaims{
+		UserId:     *userId,
 		BufferTime: global.Config.Jwt.BufferSecond,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    global.Config.Jwt.Issuer,                                                                         // 签名的发行者
@@ -24,12 +24,12 @@ func CreateClaims(claims base.BaseClaims) base.CustomClaims {
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(global.Config.Jwt.ExpiresSecond) * time.Second)), // 过期时间
 		},
 	}
-	return newClaims
+	return &newClaims
 }
 
 // ParseJwtToken 解析Token
-func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &base.CustomClaims{}, func(token *jwt.Token) (i any, e error) {
+func ParseJwtToken(tokenString string) (*common.JwtClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &common.JwtClaims{}, func(token *jwt.Token) (i any, e error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, global.TokenInvalid
 		}
@@ -50,7 +50,7 @@ func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 		}
 	}
 	if token != nil {
-		if claims, ok := token.Claims.(*base.CustomClaims); ok && token.Valid {
+		if claims, ok := token.Claims.(*common.JwtClaims); ok && token.Valid {
 			return claims, nil
 		}
 		return nil, global.TokenInvalid
@@ -60,7 +60,7 @@ func ParseJwtToken(tokenString string) (*base.CustomClaims, error) {
 }
 
 // RefreshJwtToken 刷新新的token
-func RefreshJwtToken(oldToken string, claims base.CustomClaims) (string, error) {
+func RefreshJwtToken(oldToken string, claims *common.JwtClaims) (string, error) {
 	// 使用并发控制
 	v, err, _ := global.ConcurrencyControl.Do("JWT:"+oldToken, func() (any, error) {
 		return CreateJwtToken(claims)

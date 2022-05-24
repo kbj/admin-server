@@ -1,10 +1,10 @@
 package system
 
-import "admin-server/model/base"
+import "admin-server/model/common"
 
 // Menu 菜单信息
 type Menu struct {
-	base.Model
+	common.Model
 	Name     *string `gorm:"comment:菜单名称;size:100;not null"`
 	ParentId *uint   `gorm:"comment:上级ID;not null;default:0;index"`
 	Path     *string `gorm:"comment:前端用于匹配组件的路径;size:1000;"`

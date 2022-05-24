@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"admin-server/api/internal/v1/base"
+	"admin-server/api/internal/v1/common"
 	"admin-server/api/internal/v1/system"
 )
 
 type ApiGroup struct {
-	BaseApiGroup   base.ApiGroup
+	BaseApiGroup   common.ApiGroup
 	SystemApiGroup system.ApiGroup
 }
 
